@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MarketWatcher</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>f
+    <string name="user_name_hint">Enter your user name</string>
+    <string name="user_name_label">User name:</string>
+    <string name="password_hint">Enter your password</string>
+    <string name="password_label">Password:</string>
+    <string name="login_label">Login</string>
+    <string name="start_button_label">Start</string>
+</resources>
