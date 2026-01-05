@@ -45,15 +45,6 @@ public class UserService {
         // background thread lies with the UI components that require this
 
         // Set up the connection
-//        AccountServiceGrpc.AccountServiceBlockingStub grpcClient = AccountServiceGrpc.newBlockingStub(getChannel());
-
-        // Login, retrieving the account id
-//        AccountOuterClass.LoginRequest lreq = AccountOuterClass.LoginRequest.newBuilder()
-//                .setUsername(userName)
-//                .setPassword(password)
-//                .build();
-//        AccountOuterClass.LoginReply lrep = grpcClient.login(lreq);
-
         UserServiceGrpc.UserServiceBlockingStub grpcClient = UserServiceGrpc.newBlockingStub(getChannel());
 
         UserOuterClass.AuthenticateUserReply authenticateUserReply = null;
@@ -81,24 +72,6 @@ public class UserService {
         }
 
         Log.d(TAG, "User is: " + getUserReply.getUser().getGivenName());
-
-
-        // TODO - Then do a UserService.GetUser(userId)
-
-        // TODO - THen do a AccountService.ListAccounts(userId)
-
-        // TODO - Then do a AssetService.ListAssets(accountId(s))
-
-
-        // Retrieve basic account information
-        // TODO Handle GetAccount() failures
-//        AccountOuterClass.GetAccountRequest req = AccountOuterClass.GetAccountRequest.newBuilder()
-//                .setAccountId(lrep.getAccountId())
-//                .build();
-//        AccountOuterClass.GetAccountReply reply = grpcClient.getAccount(req);
-//
-//        return reply.getAccount().getAccountName();
-
         return mapUserFromProto(getUserReply.getUser());
     }
 

@@ -36,12 +36,6 @@ public class PriceService {
         Log.d(TAG, "Starting stream");
         PriceServiceGrpc.PriceServiceStub grpcClient = PriceServiceGrpc.newStub(getChannel());
 
-//        PriceOuterClass.StreamPricesRequest req = PriceOuterClass.StreamPricesRequest.newBuilder()
-//                .addPriceIds("MSFT")
-//                .addPriceIds("GOOG")
-//                .addPriceIds("AAPL")
-//                .build();
-
         PriceOuterClass.StreamPricesRequest.Builder b = PriceOuterClass.StreamPricesRequest.newBuilder();
         for (Asset a: aList) {
             b.addPriceIds(a.getTicker());
@@ -49,25 +43,6 @@ public class PriceService {
         PriceOuterClass.StreamPricesRequest req = b.build();
 
         grpcClient.streamPrices(req, observer);
-
-//                new StreamObserver<PriceOuterClass.StreamPricesReply>() {
-//            @Override
-//            public void onNext(PriceOuterClass.StreamPricesReply value) {
-//                Log.d(TAG, "Got price: " + value.getPrice());
-//            }
-//
-//            @Override
-//            public void onError(Throwable t) {
-//                Log.d(TAG, "Got onError: ");
-//
-//            }
-//
-//            @Override
-//            public void onCompleted() {
-//                Log.d(TAG, "On Completed called");
-//            }
-//        });
-
     }
 
     public void endStream() {

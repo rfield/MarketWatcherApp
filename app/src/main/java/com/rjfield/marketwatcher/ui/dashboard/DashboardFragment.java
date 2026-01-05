@@ -95,21 +95,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                     @Override
                     public void onNext(PriceOuterClass.StreamPricesReply value) {
                         Log.d(TAG, "Got price: " + value.getPrice());
-//                        DecimalFormat df = new DecimalFormat("0.000");
-//                        Log.d(TAG, "Updating banner");
-//                        dashboardViewModel.updateBanner(value.getPrice().getPriceId() + " : " + df.format(value.getPrice().getPrice()));
                         Log.d(TAG, "Updating table");
 
                         StockQuote s = new StockQuote(value.getPrice().getPriceId(), value.getPrice().getPrice());
                         List<StockQuote> ls = new ArrayList<>();
                         ls.add(s);
                         dashboardViewModel.updateTable(ls);
-                        // TO DO
-                        // Can't do this directly. Call the view model here to update the table
-                        // the view model should have an observer that calls the adapter
-                        // or something like that
-//                        dashboardAdapter.updateOne(value.getPrice().getPriceId(), value.getPrice().getPrice());
-//                        dashboardAdapter.notifyDataSetChanged();
                     }
                     @Override
                     public void onError(Throwable t) {
