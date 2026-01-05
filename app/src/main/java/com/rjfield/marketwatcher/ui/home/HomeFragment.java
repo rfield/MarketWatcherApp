@@ -68,9 +68,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         // Send the external service request to a background thread
         executorService.execute(() -> {
             try {
-                // Simulate a long-running operation
-//                Thread.sleep(3000); // 3 seconds
-
                 userService = new UserService(getContext().getApplicationContext(), userName, password);
                 User u = userService.login();
                 sharedViewModel.SetUser(u);
@@ -79,7 +76,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 assetService = new AssetService(getContext().getApplicationContext(), u.getId());
                 List<Asset> assetList = assetService.ListAssetsForUser();
                 sharedViewModel.SetAssets(assetList);
-
             }
             catch (AuthenticationException e) {
                 Log.d(TAG, "Authentication failure");
