@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.rjfield.marketwatcher.MainActivity;
 import com.rjfield.marketwatcher.SharedViewModel;
 import com.rjfield.marketwatcher.databinding.FragmentHomeBinding;
 import com.rjfield.marketwatcher.exceptions.AssetsNotFoundException;
@@ -76,13 +77,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 assetService = new AssetService(getContext().getApplicationContext(), u.getId());
                 List<Asset> assetList = assetService.ListAssetsForUser();
                 sharedViewModel.SetAssets(assetList);
+
+                Log.d(TAG, "Enabling menu items");
+                MainActivity ma = (MainActivity) getActivity();
+                ma.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ma.enableViews(true);
+                        // or
+                        // enableAllItems(enableState);
+                    }
+                });
             }
             catch (AuthenticationException e) {
                 Log.d(TAG, "Authentication failure");
                 homeViewModel.updateBanner("Incorrect username or password");
             }
             catch (UserNotFoundException e) {
-                Log.d(TAG, "Authentication failure");
+                Log.d(TAG, "User not found exception");
                 homeViewModel.updateBanner("Username not found");
             }
             catch (AssetsNotFoundException e) {
@@ -98,6 +110,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 homeViewModel.updateBanner("Unexpected error");
             }
         });
+
     }
 
     @Override

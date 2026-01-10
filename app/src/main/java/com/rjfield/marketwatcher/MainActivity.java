@@ -15,6 +15,7 @@ import com.rjfield.marketwatcher.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    BottomNavigationView navView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -32,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        // Disable dashboard and notifications fragments until signed in
+        enableViews(false);
     }
 
+    public void enableViews(boolean b) {
+        navView.getMenu().findItem(R.id.navigation_dashboard).setEnabled(b);
+        navView.getMenu().findItem(R.id.navigation_notifications).setEnabled(b);
+    }
 }
