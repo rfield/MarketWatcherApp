@@ -18,10 +18,8 @@ import io.grpc.android.AndroidChannelBuilder;
 
 public class AssetService {
     final static public String TAG = AssetService.class.getCanonicalName();
-    final static public String USER_AGENT = "MarketWatcherApp";
     private String userId;
 
-    protected ManagedChannel channel = null;
     protected Context context = null;
 
     public AssetService(Context ctx, String id) {
@@ -30,7 +28,7 @@ public class AssetService {
     }
 
     public List<Asset> ListAssetsForUser() throws Exception {
-        AssetServiceGrpc.AssetServiceBlockingStub assetClient = AssetServiceGrpc.newBlockingStub(getChannel());
+        AssetServiceGrpc.AssetServiceBlockingStub assetClient = AssetServiceGrpc.newBlockingStub(ChannelFactory.getChannel(context));
         AssetOuterClass.ListAssetsForUserReply listAssetsForUserReply = null;
 
         try {
@@ -50,19 +48,6 @@ public class AssetService {
             aList.add(asset);
         }
         return aList;
-    }
-
-    protected Channel getChannel() {
-        if (channel == null) {
-            channel = AndroidChannelBuilder.forAddress("mac.lan", 50051)
-                    .context(context)
-//                    .intercept(interceptor)
-                    .userAgent(USER_AGENT)
-                    .usePlaintext()
-                    .idleTimeout(60, TimeUnit.SECONDS)
-                    .build();
-        }
-        return channel;
     }
 
     private Asset mapAssetsFromProto(AssetOuterClass.Asset a) {

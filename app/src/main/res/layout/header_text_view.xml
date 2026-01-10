@@ -6,44 +6,43 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/portfolio"
+        android:id="@+id/portfolio_header"
         android:layout_width="0dp"
         android:layout_weight="0.2"
         android:layout_height="wrap_content"
-        android:background="#b3ecf5"
+        android:background="#cdd1d1"
         android:padding="5dp" />
 
     <TextView
-        android:id="@+id/ticker"
+        android:id="@+id/ticker_header"
         android:layout_width="0dp"
         android:layout_weight="0.2"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="#cdd1d1"
         android:padding="5dp" />
 
     <TextView
-        android:id="@+id/price"
+        android:id="@+id/price_header"
         android:layout_width="0dp"
         android:layout_weight="0.2"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="#cdd1d1"
         android:padding="5dp" />
 
     <TextView
-        android:id="@+id/units"
+        android:id="@+id/units_header"
         android:layout_width="0dp"
         android:layout_weight="0.15"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="#cdd1d1"
         android:padding="5dp" />
 
     <TextView
-        android:id="@+id/total_position"
+        android:id="@+id/total_position_header"
         android:layout_width="0dp"
         android:layout_weight="0.25"
         android:layout_height="wrap_content"
-        android:fontFamily="monospace"
-        android:background="@android:color/white"
+        android:background="#cdd1d1"
         android:padding="5dp" />
 
 </LinearLayout>

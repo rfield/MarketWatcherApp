@@ -20,9 +20,6 @@ import price.PriceServiceGrpc;
 
 public class PriceService {
     final static public String TAG = PriceService.class.getCanonicalName();
-    final static public String USER_AGENT = "MarketWatcherApp";
-
-    protected ManagedChannel channel = null;
 
     private Context context = null;
 
@@ -34,7 +31,7 @@ public class PriceService {
 
     public void startStream(List<Asset> aList) {
         Log.d(TAG, "Starting stream");
-        PriceServiceGrpc.PriceServiceStub grpcClient = PriceServiceGrpc.newStub(getChannel());
+        PriceServiceGrpc.PriceServiceStub grpcClient = PriceServiceGrpc.newStub(ChannelFactory.getChannel(context));
 
         PriceOuterClass.StreamPricesRequest.Builder b = PriceOuterClass.StreamPricesRequest.newBuilder();
         for (Asset a: aList) {
@@ -48,18 +45,5 @@ public class PriceService {
     public void endStream() {
         Log.d(TAG, "Ending stream");
 
-    }
-
-    protected Channel getChannel() {
-        if (channel == null) {
-            channel = AndroidChannelBuilder.forAddress("mac.lan", 50051)
-                    .context(context)
-//                    .intercept(interceptor)
-                    .userAgent(USER_AGENT)
-                    .usePlaintext()
-                    .idleTimeout(60, TimeUnit.SECONDS)
-                    .build();
-        }
-        return channel;
     }
 }

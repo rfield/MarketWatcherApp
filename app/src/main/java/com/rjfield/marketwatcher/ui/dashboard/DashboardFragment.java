@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +40,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private DashboardViewModel dashboardViewModel = null;
     private SharedViewModel sharedViewModel = null;
     private DashboardAdapter dashboardAdapter = null;
+    private HeaderAdapter headerAdapter = null;
     private FragmentDashboardBinding binding;
     private PriceService priceService = null;
 
@@ -53,7 +55,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         User user = sharedViewModel.GetUser();
         if (user != null) {
-            dashboardViewModel.updateBanner(user.getGivenName() + "Click START to begin streaming");
+            dashboardViewModel.updateBanner( /*user.getGivenName() + */ "Click START to begin streaming");
         }
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
@@ -62,15 +64,19 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         final TextView textView = binding.textDashboard;
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
+        headerAdapter = new HeaderAdapter();
         dashboardAdapter = new DashboardAdapter();
+        ConcatAdapter concatAdapter = new ConcatAdapter(headerAdapter, dashboardAdapter);
+
         RecyclerView recyclerView = binding.stockList;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(dashboardAdapter);
+        recyclerView.setAdapter(concatAdapter);
 
         LiveData<List<StockQuote>> quotes = dashboardViewModel.getQuotes();
         quotes.observe(getViewLifecycleOwner(), lsq -> {
 //            dashboardAdapter.updateOne(lsq.get(0));
             dashboardAdapter.updateQuotes(lsq);
+//            dashboardAdapter.notifyDataSetChanged();
             dashboardAdapter.notifyDataSetChanged();
         });
 
@@ -78,6 +84,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         startButton.setOnClickListener(this);
 
         dashboardAdapter.initializeStockQuotes(sharedViewModel.ListAssets());
+        dashboardAdapter.notifyDataSetChanged();
 
         return root;
     }
@@ -87,7 +94,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         Log.d(TAG, "onClick: Start button pressed");
 
         dashboardViewModel.updateBanner("Live Pricing for your Holdings");
-//        dashboardAdapter.initializeStockQuotes();
         dashboardAdapter.notifyDataSetChanged();
 
         StreamObserver<PriceOuterClass.StreamPricesReply> observer =
@@ -117,9 +123,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 };
 
         executorService.execute(() -> {
-//            try {
-                // Simulate a long-running operation
-//                Thread.sleep(3000); // 3 seconds
 
                 priceService = new PriceService(getContext().getApplicationContext());
                 priceService.observer = observer;
@@ -128,11 +131,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 // Can't update the view model here like we do
                 // with a blocking gRPC call -
                 // need to do that in the stream observer
-
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//                dashboardViewModel.updateBanner("Task interrupted!");
-//            }
         });
     }
 

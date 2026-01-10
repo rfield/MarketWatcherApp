@@ -9,4 +9,6 @@
     <string name="password_label">Password:</string>
     <string name="login_label">Login</string>
     <string name="start_button_label">Start</string>
+    <string name="server_host">mac.lan</string>
+    <string name="server_port">50051</string>
 </resources>
