@@ -24,9 +24,7 @@ import user.UserServiceGrpc;
 public class UserService {
 
     final static public String TAG = UserService.class.getCanonicalName();
-    final static public String USER_AGENT = "MarketWatcherApp";
 
-    protected ManagedChannel channel = null;
     protected Context context = null;
     private final String userName;
     private final String password;
@@ -45,7 +43,7 @@ public class UserService {
         // background thread lies with the UI components that require this
 
         // Set up the connection
-        UserServiceGrpc.UserServiceBlockingStub grpcClient = UserServiceGrpc.newBlockingStub(getChannel());
+        UserServiceGrpc.UserServiceBlockingStub grpcClient = UserServiceGrpc.newBlockingStub(ChannelFactory.getChannel(context));
 
         UserOuterClass.AuthenticateUserReply authenticateUserReply = null;
         UserOuterClass.GetUserReply getUserReply = null;
@@ -77,19 +75,6 @@ public class UserService {
 
     public void logout() {
         Log.d(TAG, "logout: for (" + userName + ")");
-    }
-
-    protected Channel getChannel() {
-        if (channel == null) {
-            channel = AndroidChannelBuilder.forAddress("mac.lan", 50051)
-                    .context(context)
-//                    .intercept(interceptor)
-                    .userAgent(USER_AGENT)
-                    .usePlaintext()
-                    .idleTimeout(60, TimeUnit.SECONDS)
-                    .build();
-        }
-        return channel;
     }
 
     private User mapUserFromProto(UserOuterClass.User u) {
