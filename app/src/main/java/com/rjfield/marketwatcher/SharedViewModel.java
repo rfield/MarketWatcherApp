@@ -14,7 +14,7 @@ import java.util.List;
 
 import user.UserOuterClass;
 
-// The ShareViewModel provides singleton access to common data for multiple
+// The SharedViewModel provides singleton access to common data for multiple
 // fragments or activities.
 // Classes accessing the SharedViewModel must acquire the handle to it via
 // the Android ViewModelProvider, or they will not get access to the shared

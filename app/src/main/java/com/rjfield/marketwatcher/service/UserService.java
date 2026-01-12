@@ -34,15 +34,26 @@ public class UserService {
         this.userName = userName;
         this.password = password;
     }
+
+    // The UserService is a client-side service object that provides
+    // a means for the application to access outside resources for User information,
+    // namely the gRPC service.
+    // Notice that it is OK to "block" in the client-side service object,
+    // because it is the responsibility of the calling code to execute the
+    // service calls in a background thread. See HomeFragment.onClick().
+    // Note also that the login() service method returns a simple model object, User,
+    // using the mapUserFromProto() method.
+    // It does NOT return the generated gRPC class directly as we do not want the
+    // complexities of the gRPC classes leaking into the rest of the application,
+    // especially because we don't really "own" the definition of those classes in this app -
+    // they are owned by the server.
+    // Finally, note that this is NOT how we do authentication in a production
+    // application. This "login()" is really just an illustration for gRPC. There are
+    // many resources for Android User Authentication, including
+    // https://developer.android.com/security/fraud-prevention/authentication
     public User login() throws Exception {
         Log.d(TAG, "login:  for (" + userName + "/" + password + ")");
 
-        // Here we perform the required calls to the external server
-
-        // OK to block - the responsibility of calling this method on a
-        // background thread lies with the UI components that require this
-
-        // Set up the connection
         UserServiceGrpc.UserServiceBlockingStub grpcClient = UserServiceGrpc.newBlockingStub(ChannelFactory.getChannel(context));
 
         UserOuterClass.AuthenticateUserReply authenticateUserReply = null;
