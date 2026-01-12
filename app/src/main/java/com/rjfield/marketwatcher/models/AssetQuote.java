@@ -1,20 +1,15 @@
 package com.rjfield.marketwatcher.models;
 
-public class StockQuote {
+public class AssetQuote extends Asset {
 
-    private String accountName;
-
-    private String ticker;
     private Double price;
 
-    private Double holdingAmount;
-
-    public StockQuote(String t, Double p) {
+    public AssetQuote(String t, Double p) {
         this.ticker = t;
         this.price = p;
     }
 
-    public StockQuote(String an, String t, Double p, Double h) {
+    public AssetQuote(String an, String t, Double p, Double h) {
         this.accountName = an;
         this.ticker = t;
         this.price = p;
