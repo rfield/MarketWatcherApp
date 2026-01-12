@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rjfield.marketwatcher.R;
 import com.rjfield.marketwatcher.models.Asset;
-import com.rjfield.marketwatcher.models.StockQuote;
+import com.rjfield.marketwatcher.models.AssetQuote;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 
     private static final String TAG = DashboardAdapter.class.getCanonicalName();
 
-    private List<StockQuote> stockQuotes;
+    private List<AssetQuote> stockQuotes;
 
     public static class DashboardViewHolder extends RecyclerView.ViewHolder {
 
@@ -48,7 +48,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
     }
 
     public DashboardAdapter() {
-        stockQuotes = new ArrayList<StockQuote>();
+        stockQuotes = new ArrayList<AssetQuote>();
     }
 
     @NonNull
@@ -61,7 +61,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 
     @Override
     public void onBindViewHolder(@NonNull DashboardViewHolder holder, int position) {
-        StockQuote currentItem = stockQuotes.get(position);
+        AssetQuote currentItem = stockQuotes.get(position);
         holder.tickerTextView.setText(currentItem.getTicker());
         DecimalFormat df = new DecimalFormat("###.00");
         holder.priceTextView.setText(df.format(currentItem.getPrice()));
@@ -76,7 +76,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         holder.totalPositionTextView.setText(s);
 
         // Only display the portfolio name if it is the first, or different
-        // from the one above.
+        // from the one above. Old timers call this a "control break". :-)
         String prevPortfolioName = "";
         if (position > 0) {
             prevPortfolioName = stockQuotes.get(position-1).getAccountName();
@@ -96,19 +96,19 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 
     public void initializeStockQuotes(List<Asset> aList){
         for(Asset a: aList) {
-            stockQuotes.add(new StockQuote(a.getAccountName(), a.getTicker(), 0.0, a.getHoldingAmount()));
+            stockQuotes.add(new AssetQuote(a.getAccountName(), a.getTicker(), 0.0, a.getHoldingAmount()));
         }
     }
 
-    public void updateOne(StockQuote s) {
+    public void updateOne(AssetQuote s) {
         stockQuotes.set(0, s);
     }
 
-    public void updateQuotes(List<StockQuote> lsq) {
+    public void updateQuotes(List<AssetQuote> lsq) {
         for (int i = 0; i < lsq.size(); i++) {
             for (int j = 0; j < stockQuotes.size(); j++ ) {
                 if (lsq.get(i).getTicker().equalsIgnoreCase(stockQuotes.get(j).getTicker())) {
-                    StockQuote nq = new StockQuote(
+                    AssetQuote nq = new AssetQuote(
                             stockQuotes.get(j).getAccountName(),
                             stockQuotes.get(j).getTicker(),
                             lsq.get(i).getPrice(),

@@ -27,7 +27,6 @@ public class ChannelFactory {
             Log.d(TAG, "Host: " + host + " Port: " + port );
 
             channel = AndroidChannelBuilder.forAddress(host, port)
-//            channel = AndroidChannelBuilder.forAddress("mac.lan", 50051)
                     .context(context)
 //                    .intercept(interceptor)
                     .userAgent(USER_AGENT)

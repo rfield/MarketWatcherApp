@@ -50,6 +50,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // Attach the view model to the UI components it represents
+        // The UI will update upon notification that the data in the model has changed
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
@@ -66,7 +68,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         Log.d(TAG, "onClick: Login button pressed for (" + userName + "/" + password + ")");
 
-        // Send the external service request to a background thread
+        // Wrap the external service request in a background thread so
+        // our application doesn't freeze,
+        // and update the view models when calls complete.
         executorService.execute(() -> {
             try {
                 userService = new UserService(getContext().getApplicationContext(), userName, password);
@@ -78,14 +82,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 List<Asset> assetList = assetService.ListAssetsForUser();
                 sharedViewModel.SetAssets(assetList);
 
+                // This part is tricky, and peculiar to this app.
+                // We'd like to enable the other items in the bottom
+                // navigation after a successful login, but we perform login on
+                // a background thread. For UI data, this is not a problem
+                // because we use the view model
+                // framework to communicate updates asynchronously.
+                // For direct UI updates, like enabling menus, we must
+                // communicate this back on the main thread. Fortunately,
+                // AppCompatActivity (and classes extending it) provide
+                // a means of executing back on the main thread.
                 Log.d(TAG, "Enabling menu items");
                 MainActivity ma = (MainActivity) getActivity();
                 ma.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         ma.enableViews(true);
-                        // or
-                        // enableAllItems(enableState);
                     }
                 });
             }
@@ -110,7 +122,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 homeViewModel.updateBanner("Unexpected error");
             }
         });
-
     }
 
     @Override

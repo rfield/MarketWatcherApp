@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rjfield.marketwatcher.SharedViewModel;
 import com.rjfield.marketwatcher.databinding.FragmentDashboardBinding;
-import com.rjfield.marketwatcher.models.StockQuote;
+import com.rjfield.marketwatcher.models.AssetQuote;
 import com.rjfield.marketwatcher.models.User;
 import com.rjfield.marketwatcher.service.PriceService;
 
@@ -29,7 +29,6 @@ import java.util.concurrent.Executors;
 
 import io.grpc.stub.StreamObserver;
 import price.PriceOuterClass;
-import user.UserOuterClass;
 
 public class DashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -72,11 +71,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(concatAdapter);
 
-        LiveData<List<StockQuote>> quotes = dashboardViewModel.getQuotes();
+        LiveData<List<AssetQuote>> quotes = dashboardViewModel.getQuotes();
         quotes.observe(getViewLifecycleOwner(), lsq -> {
-//            dashboardAdapter.updateOne(lsq.get(0));
             dashboardAdapter.updateQuotes(lsq);
-//            dashboardAdapter.notifyDataSetChanged();
             dashboardAdapter.notifyDataSetChanged();
         });
 
@@ -96,6 +93,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         dashboardViewModel.updateBanner("Live Pricing for your Holdings");
         dashboardAdapter.notifyDataSetChanged();
 
+        // For processing the replies of a gRPC stream, we define a
+        // custom StreamObserver. It is convenient to do this inline here,
+        // where we have access to the view model which needs to be
+        // updated when we receive items on the stream.
         StreamObserver<PriceOuterClass.StreamPricesReply> observer =
                 new StreamObserver<PriceOuterClass.StreamPricesReply>() {
                     @Override
@@ -103,8 +104,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         Log.d(TAG, "Got price: " + value.getPrice());
                         Log.d(TAG, "Updating table");
 
-                        StockQuote s = new StockQuote(value.getPrice().getPriceId(), value.getPrice().getPrice());
-                        List<StockQuote> ls = new ArrayList<>();
+                        AssetQuote s = new AssetQuote(value.getPrice().getPriceId(), value.getPrice().getPrice());
+                        List<AssetQuote> ls = new ArrayList<>();
                         ls.add(s);
                         dashboardViewModel.updateTable(ls);
                     }
@@ -122,15 +123,15 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                     }
                 };
 
+        // Importantly, we wrap our invocation of services, like the PriceService
+        // in a separate thread. We DO NOT want to block the main UI thread as this
+        // will freeze the user interface for the duration of the call.
+        // We define an observer above to catch replies and attach it to the
+        // incoming stream.
         executorService.execute(() -> {
-
                 priceService = new PriceService(getContext().getApplicationContext());
                 priceService.observer = observer;
                 priceService.startStream(sharedViewModel.ListAssets());
-
-                // Can't update the view model here like we do
-                // with a blocking gRPC call -
-                // need to do that in the stream observer
         });
     }
 
