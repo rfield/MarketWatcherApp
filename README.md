@@ -12,3 +12,9 @@ Additionally, you will need to install Android Studio. Importing the project int
 
 ## How to Run
 Run the application from the Android Studio IDE using any appropriate device simulator, such as Pixel 4.
+
+## Screenshots
+
+![Login Screen](Screenshot1.png)
+
+![Portfolio Dashboard Screen](Screenshot1.png)
