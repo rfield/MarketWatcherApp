@@ -1,9 +1,13 @@
 package com.rjfield.marketwatcher.ui.dashboard;
 
+import android.widget.Toast;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.rjfield.marketwatcher.R;
+import com.rjfield.marketwatcher.databinding.ActivityMainBinding;
 import com.rjfield.marketwatcher.models.AssetQuote;
 
 import java.util.List;
