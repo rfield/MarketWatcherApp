@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -43,7 +44,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private FragmentDashboardBinding binding;
     private PriceService priceService = null;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
@@ -54,7 +54,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         User user = sharedViewModel.GetUser();
         if (user != null) {
-            dashboardViewModel.updateBanner( /*user.getGivenName() + */ "Click START to begin streaming");
+            dashboardViewModel.updateBanner("Click START to begin streaming prices");
         }
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
@@ -92,6 +92,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         dashboardViewModel.updateBanner("Live Pricing for your Holdings");
         dashboardAdapter.notifyDataSetChanged();
+
+        Toast.makeText(getActivity(), "Stream started...", Toast.LENGTH_SHORT).show();
 
         // For processing the replies of a gRPC stream, we define a
         // custom StreamObserver. It is convenient to do this inline here,

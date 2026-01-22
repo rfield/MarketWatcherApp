@@ -18,11 +18,14 @@ import com.rjfield.marketwatcher.databinding.FragmentHomeBinding;
 import com.rjfield.marketwatcher.exceptions.AssetsNotFoundException;
 import com.rjfield.marketwatcher.exceptions.AuthenticationException;
 import com.rjfield.marketwatcher.exceptions.UserNotFoundException;
+import com.rjfield.marketwatcher.models.AssetQuote;
 import com.rjfield.marketwatcher.models.User;
 import com.rjfield.marketwatcher.models.Asset;
 import com.rjfield.marketwatcher.service.AssetService;
+import com.rjfield.marketwatcher.service.PriceService;
 import com.rjfield.marketwatcher.service.UserService;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.List;
@@ -38,6 +41,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     SharedViewModel sharedViewModel = null;
     UserService userService = null;
     AssetService assetService = null;
+    PriceService priceService = null;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -73,14 +77,27 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         // and update the view models when calls complete.
         executorService.execute(() -> {
             try {
+                // Log the user in with their credentials
                 userService = new UserService(getContext().getApplicationContext(), userName, password);
                 User u = userService.login();
                 sharedViewModel.SetUser(u);
                 homeViewModel.updateBanner("Welcome, " + u.getGivenName() + "!");
 
+                // Retrieve the assets for this user from the database
                 assetService = new AssetService(getContext().getApplicationContext(), u.getId());
-                List<Asset> assetList = assetService.ListAssetsForUser();
+                List<AssetQuote> assetList = assetService.ListAssetsForUser();
                 sharedViewModel.SetAssets(assetList);
+
+                // Get current pricing for each asset in the portfolio
+                priceService = new PriceService(getContext().getApplicationContext());
+                List<String> priceIds = new ArrayList<String>();
+                for(AssetQuote a: assetList) {
+                    priceIds.add(a.getTicker());
+                }
+                List<Double> prices = priceService.getPrices(priceIds);
+                for (int i = 0; i < assetList.size(); i++) {
+                    assetList.get(i).setPrice(prices.get(i));
+                }
 
                 // This part is tricky, and peculiar to this app.
                 // We'd like to enable the other items in the bottom

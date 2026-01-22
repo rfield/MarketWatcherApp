@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.rjfield.marketwatcher.exceptions.AssetsNotFoundException;
 import com.rjfield.marketwatcher.models.Asset;
+import com.rjfield.marketwatcher.models.AssetQuote;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class AssetService {
         this.userId = id;
     }
 
-    public List<Asset> ListAssetsForUser() throws Exception {
+    public List<AssetQuote> ListAssetsForUser() throws Exception {
         AssetServiceGrpc.AssetServiceBlockingStub assetClient = AssetServiceGrpc.newBlockingStub(ChannelFactory.getChannel(context));
         AssetOuterClass.ListAssetsForUserReply listAssetsForUserReply = null;
 
@@ -42,20 +43,21 @@ public class AssetService {
         }
 
         Log.d(TAG, "Assets: " + listAssetsForUserReply.getAssetsList());
-        List<Asset> aList = new ArrayList<>();
+        List<AssetQuote> aList = new ArrayList<>();
         for(AssetOuterClass.Asset a: listAssetsForUserReply.getAssetsList()) {
-            Asset asset = mapAssetsFromProto(a);
+            AssetQuote asset = mapAssetsFromProto(a);
             aList.add(asset);
         }
         return aList;
     }
 
-    private Asset mapAssetsFromProto(AssetOuterClass.Asset a) {
-        Asset asset = new Asset();
+    private AssetQuote mapAssetsFromProto(AssetOuterClass.Asset a) {
+        AssetQuote asset = new AssetQuote();
         if (a != null) {
             asset.setUserName(a.getUserId());
             asset.setAccountName(a.getAccountName());
             asset.setTicker(a.getTicker());
+            asset.setPrice(0.0);
             asset.setHoldingAmount(a.getHoldingAmount());
         }
         return asset;

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.rjfield.marketwatcher.models.Asset;
+import com.rjfield.marketwatcher.models.AssetQuote;
 import com.rjfield.marketwatcher.models.User;
 import com.rjfield.marketwatcher.ui.home.HomeFragment;
 
@@ -24,7 +25,7 @@ public class SharedViewModel extends ViewModel {
     final static public String TAG = SharedViewModel.class.getCanonicalName();
 
     private final MutableLiveData<User> currentUser;
-    private final MutableLiveData<List<Asset>> assets;
+    private final MutableLiveData<List<AssetQuote>> assets;
 
     public SharedViewModel() {
         currentUser = new MutableLiveData<>();
@@ -43,12 +44,12 @@ public class SharedViewModel extends ViewModel {
         return currentUser.getValue();
     }
 
-    public void SetAssets(List<Asset> a) {
-        Log.d(TAG, "SetAssets(): " + a);
-        assets.postValue(a);
+    public void SetAssets(List<AssetQuote> la) {
+        Log.d(TAG, "SetAssets(): " + la);
+        assets.postValue(la);
     }
 
-    public List<Asset> ListAssets() {
+    public List<AssetQuote> ListAssets() {
         Log.d(TAG, "ListAssets(): " + assets.getValue());
         return assets.getValue();
     }

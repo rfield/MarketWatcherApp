@@ -94,9 +94,9 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         return stockQuotes.size();
     }
 
-    public void initializeStockQuotes(List<Asset> aList){
-        for(Asset a: aList) {
-            stockQuotes.add(new AssetQuote(a.getAccountName(), a.getTicker(), 0.0, a.getHoldingAmount()));
+    public void initializeStockQuotes(List<AssetQuote> aList){
+        for(AssetQuote a: aList) {
+            stockQuotes.add(new AssetQuote(a.getAccountName(), a.getTicker(), a.getPrice(), a.getHoldingAmount()));
         }
     }
 

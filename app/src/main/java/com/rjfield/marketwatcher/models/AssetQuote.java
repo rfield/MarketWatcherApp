@@ -4,6 +4,11 @@ public class AssetQuote extends Asset {
 
     private Double price;
 
+    public AssetQuote() {
+        super();
+        this.price = 0.0;
+    }
+
     public AssetQuote(String t, Double p) {
         this.ticker = t;
         this.price = p;
