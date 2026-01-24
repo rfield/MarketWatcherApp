@@ -53,6 +53,14 @@ public class SharedViewModel extends ViewModel {
         Log.d(TAG, "ListAssets(): " + assets.getValue());
         return assets.getValue();
     }
+
+    public Double GetTotalPosition() {
+        Double total = 0.0;
+        for(AssetQuote a: assets.getValue()) {
+            total += a.getHoldingAmount() * a.getPrice();
+        }
+        return total;
+    }
     public LiveData<User> GetUser2() {
         return currentUser;
     }
