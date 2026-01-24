@@ -41,6 +41,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private SharedViewModel sharedViewModel = null;
     private DashboardAdapter dashboardAdapter = null;
     private HeaderAdapter headerAdapter = null;
+    private FooterAdapter footerAdapter = null;
     private FragmentDashboardBinding binding;
     private PriceService priceService = null;
 
@@ -65,7 +66,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         headerAdapter = new HeaderAdapter();
         dashboardAdapter = new DashboardAdapter();
-        ConcatAdapter concatAdapter = new ConcatAdapter(headerAdapter, dashboardAdapter);
+        footerAdapter = new FooterAdapter(sharedViewModel);
+        ConcatAdapter concatAdapter = new ConcatAdapter(headerAdapter, dashboardAdapter, footerAdapter);
 
         RecyclerView recyclerView = binding.stockList;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
