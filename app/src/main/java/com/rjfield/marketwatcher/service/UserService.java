@@ -92,9 +92,9 @@ public class UserService {
         User user = new User();
         if (u != null) {
             user.setId(u.getUserId());
-            user.setUserName(u.getCredentials().getUsername());
-            user.setPasswordHash(u.getCredentials().getPasswordHash());
-            user.setToken(u.getCredentials().getToken());
+            user.setUserName(u.getUsername());
+            user.setPasswordHash(u.getPasswordHash());
+            user.setToken(u.getToken());
             user.setGivenName(u.getGivenName());
         }
         return user;
