@@ -1,5 +1,6 @@
 package com.rjfield.marketwatcher.ui.dashboard;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,6 +67,13 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         DecimalFormat df = new DecimalFormat("###.00");
         holder.priceTextView.setText(df.format(currentItem.getPrice()));
 
+        if (currentItem.getPriceChange() > 0) {
+            holder.priceTextView.setTextColor(Color.parseColor("#1b620f")); // Dark green
+        }
+        else {
+            holder.priceTextView.setTextColor(Color.RED);
+        }
+
         Log.d(TAG, "Holding amount: " + currentItem.getHoldingAmount());
         Log.d(TAG, "Total: " + currentItem.getHoldingAmount()*currentItem.getPrice());
 
@@ -96,7 +104,11 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 
     public void initializeStockQuotes(List<AssetQuote> aList){
         for(AssetQuote a: aList) {
-            stockQuotes.add(new AssetQuote(a.getAccountName(), a.getTicker(), a.getPrice(), a.getHoldingAmount()));
+            stockQuotes.add(new AssetQuote(a.getAccountName(),
+                    a.getTicker(),
+                    a.getPrice(),
+                    a.getPriceChange(),
+                    a.getHoldingAmount()));
         }
     }
 
@@ -112,6 +124,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
                             stockQuotes.get(j).getAccountName(),
                             stockQuotes.get(j).getTicker(),
                             lsq.get(i).getPrice(),
+                            lsq.get(i).getPriceChange(),
                             stockQuotes.get(j).getHoldingAmount());
                     stockQuotes.set(j, nq);
                 }
