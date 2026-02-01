@@ -4,20 +4,25 @@ public class AssetQuote extends Asset {
 
     private Double price;
 
+    private Double priceChange;
+
     public AssetQuote() {
         super();
         this.price = 0.0;
+        this.priceChange = 0.0;
     }
 
-    public AssetQuote(String t, Double p) {
+    public AssetQuote(String t, Double p, Double pc) {
         this.ticker = t;
         this.price = p;
+        this.priceChange = pc;
     }
 
-    public AssetQuote(String an, String t, Double p, Double h) {
+    public AssetQuote(String an, String t, Double p, Double pc, Double h) {
         this.accountName = an;
         this.ticker = t;
         this.price = p;
+        this.priceChange = pc;
         this.holdingAmount = h;
     }
 
@@ -52,4 +57,8 @@ public class AssetQuote extends Asset {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+    public Double getPriceChange() { return priceChange; }
+
+    public void setPriceChange(Double priceChange) { this.priceChange = priceChange; }
 }
