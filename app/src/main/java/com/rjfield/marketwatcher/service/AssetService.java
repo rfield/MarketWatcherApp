@@ -1,5 +1,7 @@
 package com.rjfield.marketwatcher.service;
 
+import static com.rjfield.marketwatcher.util.ResourceNameUtils.UserIdFromResourceName;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -58,11 +60,11 @@ public class AssetService {
         try {
             for(AccountOuterClass.Account a: listAccountsReply.getAccountsList()) {
                 AssetOuterClass.ListAssetsRequest listAssetsRequest = AssetOuterClass.ListAssetsRequest.newBuilder()
-                        .setParent("users/" + userId + "/accounts/" + a.getAccountId())
+                        .setParent(a.getName())
                         .build();
                 listAssetsReply = assetClient.listAssets(listAssetsRequest);
                 for (AssetOuterClass.Asset ast : listAssetsReply.getAssetsList()) {
-                    AssetQuote asset = mapAssetsFromProto(ast);
+                    AssetQuote asset = mapAssetsFromProto(a,ast);
                     aList.add(asset);
                 }
             }
@@ -71,39 +73,14 @@ public class AssetService {
             throw new AssetsNotFoundException("No assets found for user");
         }
 
-
-        // Alternate way of doing this...
-        // Sometimes the server will provide a convenience function for traversing the
-        // hierarchy, as shown below. If these are available, we can use them, but
-        // it best to understand the data structures in any case.
-
-//        AssetServiceGrpc.AssetServiceBlockingStub assetClient = AssetServiceGrpc.newBlockingStub(ChannelFactory.getChannel(context));
-//        AssetOuterClass.ListAssetsForUserReply listAssetsForUserReply = null;
-//
-//        try {
-//            AssetOuterClass.ListAssetsForUserRequest listAssetsForUserRequest = AssetOuterClass.ListAssetsForUserRequest.newBuilder()
-//                    .setUserId(userId)
-//                    .build();
-//            listAssetsForUserReply = assetClient.listAssetsForUser(listAssetsForUserRequest);
-//        }
-//        catch (Exception e) {
-//            throw new AssetsNotFoundException("No assets found for user");
-//        }
-//
-//        Log.d(TAG, "Assets: " + listAssetsForUserReply.getAssetsList());
-//        for(AssetOuterClass.Asset a: listAssetsForUserReply.getAssetsList()) {
-//            AssetQuote asset = mapAssetsFromProto(a);
-//            aList.add(asset);
-//        }
-
         return aList;
     }
 
-    private AssetQuote mapAssetsFromProto(AssetOuterClass.Asset a) {
+    private AssetQuote mapAssetsFromProto(AccountOuterClass.Account acc, AssetOuterClass.Asset a) {
         AssetQuote asset = new AssetQuote();
         if (a != null) {
-            asset.setUserName(a.getUserId());
-            asset.setAccountName(a.getAccountName());
+//            asset.setUserName(UserIdFromResourceName(a.getName()));
+            asset.setAccountName(acc.getAccountName());
             asset.setTicker(a.getTicker());
             asset.setPrice(0.0);
             asset.setHoldingAmount(a.getHoldingAmount());

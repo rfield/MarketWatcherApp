@@ -1,5 +1,7 @@
 package com.rjfield.marketwatcher.service;
 
+import static com.rjfield.marketwatcher.util.ResourceNameUtils.UserIdFromResourceName;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -91,7 +93,7 @@ public class UserService {
     private User mapUserFromProto(UserOuterClass.User u) {
         User user = new User();
         if (u != null) {
-            user.setId(u.getUserId());
+            user.setId(UserIdFromResourceName(u.getName()));
             user.setUserName(u.getUsername());
             user.setPasswordHash(u.getPasswordHash());
             user.setToken(u.getToken());
