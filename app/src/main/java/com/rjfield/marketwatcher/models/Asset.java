@@ -1,18 +1,18 @@
 package com.rjfield.marketwatcher.models;
 
 public class Asset {
-//    protected String userName;
     protected String accountName;
     protected String ticker;
     protected Double holdingAmount;
 
-//    public String getUserName() {
-//        return userName;
-//    }
+    public Asset() {
+    }
 
-//    public void setUserName(String userName) {
-//        this.userName = userName;
-//    }
+    public Asset(String accountName, String ticker, Double holdingAmount) {
+        this.accountName = accountName;
+        this.ticker = ticker;
+        this.holdingAmount = holdingAmount;
+    }
 
     public String getAccountName() {
         return accountName;

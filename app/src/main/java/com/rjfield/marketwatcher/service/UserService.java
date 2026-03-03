@@ -74,7 +74,7 @@ public class UserService {
 
         try {
             UserOuterClass.GetUserRequest getUserRequest = UserOuterClass.GetUserRequest.newBuilder()
-                    .setUserId(authenticateUserReply.getUserId())
+                    .setName(authenticateUserReply.getName())
                     .build();
             getUserReply =  grpcClient.getUser(getUserRequest);
         }

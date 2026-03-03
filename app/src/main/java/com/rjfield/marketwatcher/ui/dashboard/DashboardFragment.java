@@ -108,7 +108,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         Log.d(TAG, "Got price: " + value.getPrice());
                         Log.d(TAG, "Updating table");
 
-                        AssetQuote s = new AssetQuote(value.getPrice().getPriceId(),
+                        AssetQuote s = new AssetQuote(value.getPrice().getName(),
                                 value.getPrice().getPrice(),
                                 value.getPrice().getPriceChange());
                         List<AssetQuote> ls = new ArrayList<>();
