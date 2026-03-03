@@ -45,7 +45,7 @@ public class PriceService {
 
         PriceOuterClass.StreamPricesRequest.Builder b = PriceOuterClass.StreamPricesRequest.newBuilder();
         for (AssetQuote a: aList) {
-            b.addPriceIds(a.getTicker());
+            b.addNames("prices/" + a.getTicker());
         }
         PriceOuterClass.StreamPricesRequest req = b.build();
 
@@ -58,7 +58,7 @@ public class PriceService {
 
         PriceOuterClass.GetPriceRequest req =
                 PriceOuterClass.GetPriceRequest.newBuilder()
-                        .setPriceId(ticker)
+                        .setName("prices/" + ticker)
                         .build();
         PriceOuterClass.GetPriceReply rep = grpcClient.getPrice(req);
         return rep.getPrice().getPrice();
@@ -68,13 +68,13 @@ public class PriceService {
         Log.d(TAG, "Getting price for " + tickers);
         PriceServiceGrpc.PriceServiceBlockingStub grpcClient = PriceServiceGrpc.newBlockingStub(ChannelFactory.getChannel(context));
 
-        PriceOuterClass.GetPricesRequest.Builder b =
-                PriceOuterClass.GetPricesRequest.newBuilder();
+        PriceOuterClass.BatchGetPricesRequest.Builder b =
+                PriceOuterClass.BatchGetPricesRequest.newBuilder();
         for (String t: tickers) {
-            b.addPriceIds(t);
+            b.addNames("prices/" + t);
         }
-        PriceOuterClass.GetPricesRequest req = b.build();
-        PriceOuterClass.GetPricesReply rep = grpcClient.getPrices(req);
+        PriceOuterClass.BatchGetPricesRequest req = b.build();
+        PriceOuterClass.BatchGetPricesReply rep = grpcClient.batchGetPrices(req);
         List<Double> prices = new ArrayList<Double>();
         for(PriceOuterClass.Price p: rep.getPricesList()) {
             prices.add(p.getPrice());
