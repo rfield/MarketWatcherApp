@@ -21,7 +21,9 @@ import com.rjfield.marketwatcher.exceptions.UserNotFoundException;
 import com.rjfield.marketwatcher.models.AssetQuote;
 import com.rjfield.marketwatcher.models.User;
 import com.rjfield.marketwatcher.models.Asset;
+import com.rjfield.marketwatcher.models.UserNotification;
 import com.rjfield.marketwatcher.service.AssetService;
+import com.rjfield.marketwatcher.service.NotificationService;
 import com.rjfield.marketwatcher.service.PriceService;
 import com.rjfield.marketwatcher.service.UserService;
 
@@ -42,6 +44,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     UserService userService = null;
     AssetService assetService = null;
     PriceService priceService = null;
+    NotificationService notificationService = null;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -98,6 +102,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 for (int i = 0; i < assetList.size(); i++) {
                     assetList.get(i).setPrice(prices.get(i));
                 }
+
+                notificationService = new NotificationService(getContext().getApplicationContext(), u.getId());
+                List<UserNotification> nList = notificationService.ListNotificationsForUser();
+                sharedViewModel.setNotifications(nList);
 
                 // This part is tricky, and peculiar to this app.
                 // We'd like to enable the other items in the bottom
