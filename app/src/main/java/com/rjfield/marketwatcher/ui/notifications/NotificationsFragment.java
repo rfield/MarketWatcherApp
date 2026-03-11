@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -81,6 +82,8 @@ public class NotificationsFragment extends Fragment implements View.OnClickListe
 
     public void onClick(View v) {
         Log.d(TAG, "onClick: Refresh button pressed");
+
+        Toast.makeText(getActivity(), "Refreshing...", Toast.LENGTH_SHORT).show();
 
         String userId = sharedViewModel.GetUser().getId();
         executorService.execute(() -> {
