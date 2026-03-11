@@ -15,6 +15,7 @@ lifecycleViewmodelKtx = "2.10.0"
 navigationFragment = "2.9.6"
 navigationUi = "2.9.6"
 annotationsApi = "6.0.53"
+cameraCamera2Pipe = "1.6.0-rc01"
 
 
 [libraries]
@@ -33,6 +34,7 @@ grpc-android = { module = "io.grpc:grpc-android", version.ref = "grpcAndroid" }
 grpc-okhttp = { module = "io.grpc:grpc-okhttp", version.ref = "grpcOkhttp" }
 grpc-protobuf-lite = { module = "io.grpc:grpc-protobuf-lite", version.ref = "grpcProtobufLite" }
 grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpcProtobufLite" }
+camera-camera2-pipe = { group = "androidx.camera", name = "camera-camera2-pipe", version.ref = "cameraCamera2Pipe" }
 
 
 [plugins]

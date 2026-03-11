@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.rjfield.marketwatcher.models.Asset;
 import com.rjfield.marketwatcher.models.AssetQuote;
 import com.rjfield.marketwatcher.models.User;
+import com.rjfield.marketwatcher.models.UserNotification;
 import com.rjfield.marketwatcher.ui.home.HomeFragment;
 
 import java.util.List;
@@ -26,10 +27,23 @@ public class SharedViewModel extends ViewModel {
 
     private final MutableLiveData<User> currentUser;
     private final MutableLiveData<List<AssetQuote>> assets;
+    private final MutableLiveData<List<UserNotification>> notifications;
+
 
     public SharedViewModel() {
         currentUser = new MutableLiveData<>();
         assets = new MutableLiveData<>();
+        notifications = new MutableLiveData<>();
+    }
+
+    public List<UserNotification> getNotifications() {
+        Log.d(TAG, "getNotifications(): " + notifications.getValue());
+        return notifications.getValue();
+    }
+
+    public void setNotifications(List<UserNotification> nList) {
+        Log.d(TAG, "setNotifications(): " + nList);
+        notifications.postValue(nList);
     }
 
     public void SetUser(User u) {
