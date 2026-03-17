@@ -25,6 +25,14 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 
     private List<AssetQuote> stockQuotes;
 
+    // Set up for clicking on a Ticker in the table to get details
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+    private static OnItemClickListener listener;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
     public static class DashboardViewHolder extends RecyclerView.ViewHolder {
 
         public TextView portfolioTextView;
@@ -45,6 +53,18 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
             portfolioTextView.setTypeface(null, Typeface.BOLD_ITALIC);
             tickerTextView.setTypeface(null, Typeface.BOLD);
             totalPositionTextView.setTypeface(Typeface.MONOSPACE);
+
+            tickerTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getBindingAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 

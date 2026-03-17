@@ -1,9 +1,12 @@
 package com.rjfield.marketwatcher.models;
 
+import java.util.List;
+
 public class Asset {
     protected String accountName;
     protected String ticker;
     protected Double holdingAmount;
+    protected List<Double> historicalPrices;
 
     public Asset() {
     }
@@ -36,5 +39,13 @@ public class Asset {
 
     public void setHoldingAmount(Double holdingAmount) {
         this.holdingAmount = holdingAmount;
+    }
+
+    public List<Double> getHistoricalPrices() {
+        return historicalPrices;
+    }
+
+    public void setHistoricalPrices(List<Double> historicalPrices) {
+        this.historicalPrices = historicalPrices;
     }
 }

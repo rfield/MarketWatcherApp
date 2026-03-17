@@ -82,4 +82,7 @@ dependencies {
     implementation(libs.grpc.stub)
     implementation(libs.grpc.android)
     implementation(libs.annotations.api)
+
+    // Dependencies for charts
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

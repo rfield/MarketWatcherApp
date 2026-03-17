@@ -22,6 +22,7 @@ import com.rjfield.marketwatcher.databinding.FragmentDashboardBinding;
 import com.rjfield.marketwatcher.models.AssetQuote;
 import com.rjfield.marketwatcher.models.User;
 import com.rjfield.marketwatcher.service.PriceService;
+import com.rjfield.marketwatcher.ui.details.StockDetailsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.concurrent.Executors;
 import io.grpc.stub.StreamObserver;
 import price.PriceOuterClass;
 
-public class DashboardFragment extends Fragment implements View.OnClickListener {
+public class DashboardFragment extends Fragment implements View.OnClickListener, DashboardAdapter.OnItemClickListener {
 
     final static public String TAG = DashboardFragment.class.getCanonicalName();
 
@@ -66,6 +67,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         headerAdapter = new HeaderAdapter();
         dashboardAdapter = new DashboardAdapter();
+        dashboardAdapter.setOnItemClickListener(this);
         footerAdapter = new FooterAdapter(sharedViewModel);
         ConcatAdapter concatAdapter = new ConcatAdapter(headerAdapter, dashboardAdapter, footerAdapter);
 
@@ -139,6 +141,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 priceService.observer = observer;
                 priceService.startStream(sharedViewModel.ListAssets());
         });
+    }
+
+    public void onItemClick(int position) {
+            Log.d(TAG, "Item clicked: " + position);
+            String ticker = sharedViewModel.ListAssets().get(position).getTicker();
+            Log.d(TAG, "Ticker: " + ticker);
+            StockDetailsFragment stockDetailsFragment = StockDetailsFragment.newInstance(ticker);
+            stockDetailsFragment.show(getChildFragmentManager(), "stockDetails");
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.rjfield.marketwatcher.service.PriceService;
 import com.rjfield.marketwatcher.service.UserService;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.List;
@@ -70,6 +71,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    // onClick for the Home Fragment is a very important method.
+    // This results in a significant amount of logic being executed in the
+    // background, including:
+    // - authenticating the user
+    // - loading all their portfolio holdings into the SharedViewModel
+    // - loading fresh pricing for all holdings
+    // - loading any notifications
+    // - loading historical pricing and other details for holdings
+    // - enabling the bottom navigation menu
     public void onClick(View v) {
         final String userName = binding.userNameEditText.getText().toString();
         final String password = binding.passwordEditText.getText().toString();
@@ -90,7 +100,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 // Retrieve the assets for this user from the database
                 assetService = new AssetService(getContext().getApplicationContext(), u.getId());
                 List<AssetQuote> assetList = assetService.ListAssetsForUser();
-                sharedViewModel.SetAssets(assetList);
 
                 // Get current pricing for each asset in the portfolio
                 priceService = new PriceService(getContext().getApplicationContext());
@@ -103,6 +112,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     assetList.get(i).setPrice(prices.get(i));
                 }
 
+                // Get historical pricing for each asset in the portfolio
+//                Random rand = new Random();
+//                List<Double> histPrices = new ArrayList<Double>();
+                for (String pid: priceIds ) {
+                    List<Double> histPrices = priceService.getHistoricalPrices(pid);
+//                    for(int i = 0; i < 6; i++) {
+//                        histPrices.add(new Double(rand.nextFloat() * (200.0f - 100.0f) + 100.0f));
+//                    }
+                    Log.d(TAG, "Historical prices for " + pid + ": " + histPrices);
+                    // TODO - fix this VERY inefficient way of doing this
+                    for (AssetQuote a: assetList) {
+                        if (a.getTicker().equals(pid)) {
+                            a.setHistoricalPrices(histPrices);
+                        }
+                    }
+                }
+                sharedViewModel.SetAssets(assetList);
+
+
+                // Retrieve notifications for this user
                 notificationService = new NotificationService(getContext().getApplicationContext(), u.getId());
                 List<UserNotification> nList = notificationService.ListNotificationsForUser();
                 sharedViewModel.setNotifications(nList);
