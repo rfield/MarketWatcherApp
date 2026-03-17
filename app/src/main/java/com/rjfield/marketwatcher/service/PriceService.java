@@ -82,6 +82,22 @@ public class PriceService {
         return prices;
     }
 
+    public List<Double> getHistoricalPrices(String ticker) {
+        Log.d(TAG, "Getting historical price for " + ticker);
+        PriceServiceGrpc.PriceServiceBlockingStub grpcClient = PriceServiceGrpc.newBlockingStub(ChannelFactory.getChannel(context));
+
+        PriceOuterClass.GetHistoricalPricesRequest req =
+                PriceOuterClass.GetHistoricalPricesRequest.newBuilder()
+                        .setName("prices/" + ticker)
+                        .build();
+        PriceOuterClass.GetHistoricalPricesReply rep = grpcClient.getHistoricalPrices(req);
+        List<Double> prices = new ArrayList<Double>();
+        for(PriceOuterClass.Price p: rep.getPricesList()) {
+            prices.add(p.getPrice());
+        }
+        return prices;
+    }
+
     public void endStream() {
         Log.d(TAG, "Ending stream");
     }

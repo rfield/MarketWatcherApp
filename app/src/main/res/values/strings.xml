@@ -10,6 +10,8 @@
     <string name="login_label">Login</string>
     <string name="start_button_label">Start</string>
     <string name="refresh_button_label">Refresh</string>
+    <string name="ok_button_label">OK</string>
     <string name="server_host">mac.lan</string>
     <string name="server_port">50051</string>
+    <string name="click_on_a_ticker_to_get_details">Click on a ticker to get details.</string>
 </resources>
