@@ -33,12 +33,8 @@ import com.rjfield.marketwatcher.models.ChartDataPoint;
 
 import com.rjfield.marketwatcher.util.DataAxisValueFormatter;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class StockDetailsFragment extends DialogFragment implements View.OnClickListener {
 
@@ -81,6 +77,7 @@ public class StockDetailsFragment extends DialogFragment implements View.OnClick
 
     private void populateLineChart(String ticker) {
 
+        // 0. Get this historical prices for this ticker from the SharedViewModel
         List<Double> prices = new ArrayList<>();
         sharedViewModel = new ViewModelProvider(getActivity()).get(SharedViewModel.class);
         List<AssetQuote> aList = sharedViewModel.ListAssets();
@@ -94,55 +91,46 @@ public class StockDetailsFragment extends DialogFragment implements View.OnClick
         Log.d(TAG, "Number of prices: " + prices.size());
         Log.d(TAG, "Prices: " + prices);
 
-        Random rand = new Random();
-        List<ChartDataPoint> chartDataPoints = new ArrayList<>();
-        // Loop over last 6 days of data; custom renderer expects the x-axis
+        // 1. Start creating ChartDataPoints for the LineChart
+        // Loop over last 6 months of data; custom renderer expects the x-axis
         // to be the number of months back the price corresponds to
+        // Note that this assumes the server returns the last 6 months
+        // of prices, which is does, currently.
+        List<ChartDataPoint> chartDataPoints = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-//            LocalDate dt = LocalDate.now(ZoneId.systemDefault()).minusDays(i);
-//            long ts = dt.atTime(17, 0).toEpochSecond(ZoneId.systemDefault().getRules().getOffset(Instant.now()));
-//            float px = rand.nextFloat() * (200.0f - 100.0f) + 100.0f;
             chartDataPoints.add(new ChartDataPoint(i, prices.get(i).floatValue()));
-//            chartDataPoints.add(new ChartDataPoint(i, px));
         }
 
-        // 1. Create a list of Entry objects (each Entry is an x,y pair)
+        // 2. Create a list of Entry objects (each Entry is an x,y pair)
         List<Entry> entries = new ArrayList<>();
         for (ChartDataPoint cp : chartDataPoints) {
             entries.add(new Entry(cp.getTimestampInSeconds(), cp.getValueY()));
         }
-//        entries.add(new Entry(0, 10));
-//        entries.add(new Entry(1, 15));
-//        entries.add(new Entry(2, 7));
-//        entries.add(new Entry(3, 20));
-//        entries.add(new Entry(4, 12));
-//        entries.add(new Entry(5, 18));
-        // Add more entries as needed
 
-        // 2. Create a DataSet object from the entries list
+        // 3. Create a DataSet object from the entries list
         LineDataSet dataSet = new LineDataSet(entries, "Daily Closing Price"); // Add a label for the legend
 
-        // Customize the dataSet (optional)
+        // 4. Customize the dataSet
         dataSet.setColor(Color.CYAN);
         dataSet.setCircleColor(Color.CYAN);
         dataSet.setLineWidth(2f);
         dataSet.setCircleRadius(5f);
         dataSet.setDrawValues(false);
 
-        // 3. Create a LineData object with the dataSet
+        // 5. Create a LineData object with the dataSet
         LineData lineData = new LineData(dataSet);
 
-        // 4. Set the data to the chart
+        // 6. Set the data to the chart
         lineChart.setData(lineData);
 
-        // 4.5  Set up formatting
+        // 7.  Set up formatting
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setValueFormatter(new DataAxisValueFormatter());
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f); // Ensure labels don't overlap
         xAxis.setLabelRotationAngle(-45); // Optional: rotate labels
 
-        // 5. Refresh the chart (animate calls invalidate)
+        // 8. Refresh the chart (animate calls invalidate)
         lineChart.getDescription().setEnabled(false); // Disable description label
         lineChart.animateY(1000); // Animate the chart
         lineChart.invalidate(); // Refresh the chart
@@ -158,10 +146,6 @@ public class StockDetailsFragment extends DialogFragment implements View.OnClick
 
             // Apply the new layout parameters
             getDialog().getWindow().setLayout(dialogWidth, dialogHeight);
-//            getDialog().getWindow().setLayout(300, 400);
-
-            // Make background transparent if you have rounded corners or margins in XML
-//             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }
 

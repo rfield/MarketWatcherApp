@@ -20,3 +20,7 @@ Run the application from the Android Studio IDE using any appropriate device sim
 ![Login Screen](Screenshot1.png)
 
 ![Portfolio Dashboard Screen](Screenshot2.png)
+
+![Notifications Screen](Screenshot3.png)
+
+![Price History Screen](Screenshot4.png)
